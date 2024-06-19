@@ -12,20 +12,37 @@ find_package(SDL2 REQUIRED)
 include_directories(/opt/homebrew/Cellar/sdl2/2.30.3/include)
 
 
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} main.cpp
+        functions.h
+        startmenu.h
+        stage1.h
+        reset.h
+)
 
 
 set(MACOSX_BUNDLE_ICON_FILE ${CMAKE_SOURCE_DIR}/Resources/Icon.icns)
 set(MACOSX_BUNDLE_INFO_PLIST /opt/homebrew/share/cmake/Modules/MacOSXBundleInfo.plist.in)
 set_target_properties(${PROJECT_NAME} PROPERTIES
   RESOURCE "${MACOSX_BUNDLE_ICON_FILE}"
-  MACOSX_BUNDLE_ICON_FILE ${CMAKE_SOURCE_DIR}/Resources/Icon.icns
+  MACOSX_BUNDLE_ICON_FILE icon.icns
   MACOSX_BUNDLE 1  # Add this line
   MACOSX_BUNDLE_INFO_PLIST ${MACOSX_BUNDLE_INFO_PLIST}
   MACOSX_BUNDLE_BUNDLE_NAME RotateDick.app
   MACOSX_BUNDLE_BUNDLE_VERSION "5.20"
   MACOSX_BUNDLE_SHORT_VERSION_STRING "VersionString"
-  MACOSX_BUNDLE_GUI_IDENTIFIER "com.Rotate.Dick"
+  MACOSX_BUNDLE_GUI_IDENTIFIER "app.Rotate.Dicks"
   XCODE_ATTRIBUTE_ENABLE_HARDENED_RUNTIME YES
+)
+set(ICON_SRC Resources/icon.icns)
+set_source_files_properties(${ICON_SRC} PROPERTIES
+        MACOSX_PACKAGE_LOCATION "Resources"
+)
+install(DIRECTORY Resources/
+        DESTINATION RotateDick.app/Contents/Resources/
+        COMPONENT Runtime
+)
+install(DIRECTORY dicks/
+        DESTINATION RotateDick.app/Contents/dicks/
+        COMPONENT Runtime
 )
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
