@@ -37,12 +37,5 @@ set(ICON_SRC Resources/icon.icns)
 set_source_files_properties(${ICON_SRC} PROPERTIES
         MACOSX_PACKAGE_LOCATION "Resources"
 )
-install(DIRECTORY Resources/
-        DESTINATION RotateDick.app/Contents/Resources/
-        COMPONENT Runtime
-)
-install(DIRECTORY dicks/
-        DESTINATION RotateDick.app/Contents/dicks/
-        COMPONENT Runtime
-)
+
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
