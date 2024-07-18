@@ -1,15 +1,15 @@
 ###########################################################################
-#     install SDL library first                                           #
-#                                                                         #
-#     go to libsdl.org to get the SDL2.framework                          #
+#     install SDL-dev-tools first                                         #
+#     for example in ubuntu:                                              #
+#     (please add sudo if not in root account)apt install libsdl2-dev     #
 #     compile:                                                            #
-#     cd build && cmake build .. && make                                  #
-#                                                                         #
-#                                                                         #
+#     gcc main.cpp -o RotateDick.out -lSDL2                               #
+#     (if you do not have a gcc, install first for example in ubuntu:     #
+#     apt install gcc)                                                    #
 #     run:                                                                #
-#     you should copy resource file to the package like the dir "Dicks"   #
+#     ./RotateDick.out                                                    #
 #                                                                         #
 #                                                      made by shousake   #
 #                                                          version:       #
-#                                                     RotateDickMac  1.1  #
+#                                                     RotateDickLinux1.0  #
 ###########################################################################

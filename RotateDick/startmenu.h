@@ -1,34 +1,21 @@
 #ifndef ROTATEDICK_STARTMENU_H
 #define ROTATEDICK_STARTMENU_H
-
+#include"blocks.h"
 #include "functions.h"
-SDL_bool startMenu()
+int startMenu()
 {
     SDL_Rect st = {446,400,78,78};
-
-    strcpy(pdir, dirname(cwd));
-    strcat(pdir, "/../audios/menu.wav");
-    if (SDL_LoadWAV(pdir, &wav_spec, &wav_buffer, &wav_length) == NULL) {
-        SDL_Log("Could not open wav file: %s\n", SDL_GetError());
-        return SDL_FALSE;
-    }
-
-    audio.start = wav_buffer;
-    audio.pos = wav_buffer;
-    audio.length = wav_length;
-    audio.total_length = wav_length;
-    wav_spec.callback = audio_callback;
-    wav_spec.userdata = &audio;
-    if (SDL_OpenAudio(&wav_spec, NULL) < 0)
-    {
-        SDL_Log("SDL_OpenAudio failed: %s\n", SDL_GetError());
-        SDL_FreeWAV(wav_buffer);
-
-        return SDL_FALSE;
-    }
+    load_WAV("audios/menu.wav",SDL_TRUE);
     SDL_PauseAudio(0);
+    freeQuestionblocks();
+    addQBlocks(290,400,50,50,10,6);
+    addQBlocks(630,400,50,50,10,1);
+    SDL_Texture *hide = get_BMPTexture("pic/ds2.bmp");
+
+
     while (1)
     {
+
         SDL_Event event;
         if (SDL_PollEvent(&event))
         {
@@ -84,14 +71,36 @@ SDL_bool startMenu()
                 st.y=400;
             }
 
+            if (event.type == SDL_MOUSEBUTTONDOWN)
+            {
+                if((event.button.x>290&&event.button.x<290+50&&event.button.y>400&&event.button.y<450)||(event.button.x>630&&event.button.x<630+50&&event.button.y>400&&event.button.y<450))
+                {
+                    for(int i=0;i<200;i++)
+                    {
+                        if (SDL_PollEvent(&event))
+                        {
+                            if (event.type == SDL_QUIT) {
+                                return SDL_FALSE;
+                            }
+                        }
+                        SDL_RenderClear(renderer);
+                        SDL_RenderCopyEx(renderer, hide, NULL, NULL, 0, NULL, SDL_FLIP_NONE);
+                        SDL_RenderPresent(renderer); // 更新屏幕显示
+                        SDL_Delay(10);
+                    }
+
+                }
+            }
         }
         SDL_RenderClear(renderer);
 
         SDL_RenderCopyEx(renderer, TRD, NULL, NULL, 0, NULL, SDL_FLIP_NONE);
 
         SDL_RenderCopyEx(renderer, d[0].Dtext, NULL, &st, 0, NULL, SDL_FLIP_NONE);
+        putQblock();
 
         SDL_RenderPresent(renderer); // 更新屏幕显示
+
         SDL_Delay(10);
     }
 }
