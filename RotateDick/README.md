@@ -1,7 +1,7 @@
 # #################################################################################################
 #     install SDL-dev-tools first       
 #                                                                         
-#     (please add sudo if not in root account)brew install sdl2           
+#     brew install sdl2           
 #     (if you do not have a cmake, install first for example in MacOS:    
 #     brew install cmake)                                                 
 #     compile:                                                            

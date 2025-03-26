@@ -13,12 +13,13 @@ include_directories(/opt/homebrew/Cellar/sdl2/2.30.3/include)
 
 
 add_executable(${PROJECT_NAME} main.c
-        functions.h
-        startmenu.h
-        stage1.h
-        reset.h
-        stage2.h
-        blocks.h
+        functions.c
+        blocks.c
+        reset.c
+        startmenu.c
+        stage1.c
+        stage2.c
+
 )
 
 

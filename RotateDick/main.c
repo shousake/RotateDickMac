@@ -19,6 +19,8 @@ int main(int argc, char* argv[]) {
     d[3].orDick = get_BMPSerface("dicks/dickhead3.bmp");
     SDL_Surface* bk = get_BMPSerface("dicks/bk.bmp");
     SDL_Surface* RD = get_BMPSerface("dicks/RD.bmp");
+    SDL_Surface* FD = get_BMPSerface("pic/11.bmp");
+   // FD = get_BMPTexture("pic/11.bmp");;
     window = SDL_CreateWindow("Rotate Dicks", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, logical_width, logical_height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     SDL_RenderSetLogicalSize(renderer, logical_width, logical_height);
@@ -26,7 +28,8 @@ int main(int argc, char* argv[]) {
     // SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, dick);
     Tbk =SDL_CreateTextureFromSurface(renderer, bk);
     TRD =SDL_CreateTextureFromSurface(renderer, RD);
-   // setTransparentColor(d[0].orDick, 0, 0, 0);
+    TFD = SDL_CreateTextureFromSurface(renderer,FD);
+    // setTransparentColor(d[0].orDick, 0, 0, 0);
 
     for (int i = 0; i < 4; i++) {
         d[i].isDick = SDL_FALSE;
@@ -45,26 +48,48 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 initQblocks();
-//stage2();
-    while(1)
-    {
+initPipes();
 
-    if(!startMenu())
-    {
-        end();
-        return 0;
-    }
-int tmp =stage1();
-    if(tmp == 0)
-    {
-        end();
-        return 0;
-    }
-    if( tmp == 1 && (!stage1pass()) )
-    {
-        end();
-        return 0;
-    }
+
+
+    while(1) {
+        int tmp = 2;
+
+        if (!startMenu()) {
+            end();
+            return 0;
+        }
+
+        while (tmp == 2)
+        {
+            tmp = stage1();
+            if (tmp == 0) {
+                end();
+                return 0;
+            }
+            if (tmp == 1 && (!stage1pass())) {
+                end();
+                return 0;
+            }
+
+
+        }
+        tmp = 2;
+
+
+        while (tmp == 2)
+        {
+            tmp = stage2();
+            if (tmp == 0) {
+                end();
+                return 0;
+            }
+            if (tmp == 1 && (!stage2pass())) {
+                end();
+                return 0;
+            }
+        }
+
 
     }
 

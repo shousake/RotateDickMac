@@ -6,15 +6,10 @@
 #define ROTATEDICK_BLOCKS_H
 #include "functions.h"
 
-SDL_Texture *QblockTexture;
-SDL_Rect Qposition[4] =
-        {
-        {1,0,108,95},
-        {110,0,108,95},
-        {219,0,108,95},
-        {328,0,108,95}
-        };
-SDL_Rect NullBlock={437,0,108,95};
+extern SDL_Texture *QblockTexture;
+extern SDL_Texture *PipeTexture;
+extern SDL_Rect Qposition[4] ;
+extern SDL_Rect NullBlock;
 struct Questionblock
 {
     int num;
@@ -37,191 +32,49 @@ struct NullBlock
     int BlockID;
     struct NullBlock *next;
 };
-struct NullBlock *Nblocks;
-struct Questionblock *Qblocks;
-SDL_bool initQblocks()
+struct pipeBlock
 {
+    int x;
+    int y;
+    int width;
+    int height;
+    int BlockID;
+    int pattern;
+    struct pipeBlock *next;
+};
 
-    QblockTexture= get_BMPTexture("pic/Qblocks.bmp");
-    if (QblockTexture == NULL )
-    {
-        exit(1);
-    }
-    return SDL_TRUE;
-}
-
-
-SDL_bool putQblock() {
-    struct Questionblock* current = Qblocks;
-    while (current != NULL) {
-        if (current->isUse) {
-            SDL_Rect rec;
-            rec.x = current->x;
-            rec.y = current->y;
-            rec.w = current->width;
-            rec.h = current->height;
-            SDL_RenderCopyEx(renderer, QblockTexture, &Qposition[current->num], &rec, 0, NULL, SDL_FLIP_NONE);
-
-            if (current->count == current->frequency) {
-                current->num++;
-                if (current->num == 4)
-                    current->num = 0;
-                current->count = 0;
-            } else {
-                current->count++;
-            }
-        }
-        current = current->next; // 移动到下一个节点
-    }
-
-    return SDL_TRUE;
-}
-SDL_bool addQBlocks(int x,int y,int width,int height,int frequency,int BlockID)
+struct objects
 {
-    struct Questionblock *i;
-    i = Qblocks;
-    struct Questionblock* prev = NULL;
+    SDL_Rect rect;
+    int ID;
+    struct objects *next;
+};
+//extern struct NullBlock *Nblocks;
+//extern struct Questionblock *Qblocks;
+//extern struct pipeBlock *Pblocks;
+//extern struct objects *Objects;
+//extern SDL_Rect Pipe[3];
 
-    while(i != NULL)
-    {
-        if(i->BlockID == BlockID)
-        {
-            return SDL_FALSE;
-        }
-        i=i->next;
-    }
-    i = Qblocks;
-    while(i != NULL && i->isUse)
-     {
+SDL_bool initPipes();
+SDL_bool initQblocks();
+SDL_bool putQblock();
+SDL_bool addQBlocks(int x,int y,int width,int height,int frequency,int BlockID);
+void freeQuestionblocks();
+SDL_bool DeleteQblock(int BlockID);
 
-        prev = i;
-         i = i->next;
-     }
-     if(i!=NULL)
-     {
-         i->x = x;
-         i->y = y;
-         i->width = width;
-         i->height = height;
-         i->frequency = frequency;
-         i->BlockID = BlockID;
-     }else{
-         struct Questionblock* newBlock = (struct Questionblock*)malloc(sizeof(struct Questionblock));
-         if (newBlock == NULL) {
-             fprintf(stderr, "Memory allocation failed\n");
-             return SDL_FALSE;
-         }
-         newBlock->x = x;
-         newBlock->y = y;
-         newBlock->width = width;
-         newBlock->height = height;
-         newBlock->isUse = SDL_TRUE;
-         newBlock->frequency = frequency;
-         newBlock->BlockID = BlockID;
-         newBlock->next = NULL;
-         if (prev != NULL) {
-             prev->next = newBlock;
-         } else {
-             Qblocks = newBlock;  // 如果链表为空，更新头节点
-         }
-     }
-
-     return SDL_TRUE;
-}
-void freeQuestionblocks() {
-    struct Questionblock* current = Qblocks;
-    struct Questionblock* nextNode = NULL;
-
-    while (current != NULL) {
-        nextNode = current->next;
-        free(current);
-        current = nextNode;
-    }
-    Qblocks = NULL; // 确保头节点被设置为NULL，表示链表已清空
-}
-SDL_bool DeleteQblock(int BlockID) {
-    struct Questionblock* current = Qblocks;
-    struct Questionblock* prev = NULL;
-
-    while (current != NULL) {
-        if (current->BlockID == BlockID) {
-            if (prev != NULL) {
-                prev->next = current->next;
-            } else {
-                Qblocks = current->next; // 如果删除的是头节点
-            }
-            free(current);
-            return SDL_TRUE;
-        }
-        prev = current;
-        current = current->next;
-    }
-
-    return SDL_FALSE; // 未找到指定的BlockID
-}
-SDL_bool addNullBlock(int x,int y,int width,int height,int BlockID)
-{
-    struct NullBlock *i;
-    i = Nblocks;
-    struct NullBlock* prev = NULL;
-    while(i != NULL)
-    {
-        if(i->BlockID == BlockID)
-        {
-            return SDL_FALSE;
-        }
-        prev = i;
-        i = i->next;
-    }
-    if(i!=NULL)
-    {
-        i->x = x;
-        i->y = y;
-        i->width = width;
-        i->height = height;
-
-        i->BlockID = BlockID;
-    }else{
-        struct NullBlock* newBlock = (struct NullBlock*)malloc(sizeof(struct NullBlock));
-        if (newBlock == NULL) {
-            fprintf(stderr, "Memory allocation failed\n");
-            return SDL_FALSE;
-        }
-        newBlock->x = x;
-        newBlock->y = y;
-        newBlock->width = width;
-        newBlock->height = height;
-
-
-        newBlock->BlockID = BlockID;
-        newBlock->next = NULL;
-        if (prev != NULL) {
-            prev->next = newBlock;
-        } else {
-            Nblocks = newBlock;  // 如果链表为空，更新头节点
-        }
-    }
-
-    return SDL_TRUE;
-
-}
-SDL_bool putNullBlocks()
-{
-    struct NullBlock* current = Nblocks;
-    while (current != NULL) {
-
-            SDL_Rect rec;
-            rec.x = current->x;
-            rec.y = current->y;
-            rec.w = current->width;
-            rec.h = current->height;
-            SDL_RenderCopyEx(renderer, QblockTexture, &NullBlock, &rec, 0, NULL, SDL_FLIP_NONE);
-
-
-
-        current = current->next; // 移动到下一个节点
-    }
-
-    return SDL_TRUE;
-}
+SDL_bool ChangeQblockPos(int BlockID,SDL_Rect change);
+SDL_bool addNullBlock(int x,int y,int width,int height,int BlockID);
+SDL_bool putNullBlocks();
+SDL_bool collideBlock(SDL_Rect character,SDL_Rect object);
+SDL_bool addPipeBlocks(int x,int y,int BlockID, int pattern);
+SDL_bool putPipeBlocks();
+SDL_bool ChangePipePos(int BlockID,SDL_Rect change);
+SDL_bool movePipePos(int BlockID,SDL_Rect move);
+SDL_bool checkCollides(SDL_Rect character,SDL_Rect change);
+void freeObjects();
+void freePipes();
+SDL_bool deleteObject(int ID);
+void freeNullblocks();
+SDL_bool addObjects(int ID, SDL_Rect newRect);
+SDL_Rect getObjectsPos(int ID,SDL_Rect change);
 #endif //ROTATEDICK_BLOCKS_H
